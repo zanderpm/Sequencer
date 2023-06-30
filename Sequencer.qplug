@@ -5,8 +5,8 @@
 -- Information block for the plugin
 PluginInfo = {
   Name = "Sequencer",
-  Version = "1.0",
-  BuildVersion = "1.0.0.0",
+  Version = "1.1",
+  BuildVersion = "1.1.0.0",
   Id = "859f42af-ede4-4392-a921-73f65cee3029",
   Author = "Paul Zander",
   Description = "Sequences power-ups or anything else that requires delays"  
@@ -68,7 +68,7 @@ function GetControls(props)
     ButtonType = "Trigger",
     Count = 1,
     UserPin = true,
-    PinStyle = "Both",
+    PinStyle = "Both"
   })
   table.insert(ctrls, {
     Name = "SequenceOff",
@@ -76,7 +76,7 @@ function GetControls(props)
     ButtonType = "Trigger",
     Count = 1,
     UserPin = true,
-    PinStyle = "Both",
+    PinStyle = "Both"
   })
   table.insert(ctrls, {
     Name = "Delay",
@@ -86,7 +86,7 @@ function GetControls(props)
     Max = 60,
     Count = 1,
     UserPin = true,
-    PinStyle = "Both",
+    PinStyle = "Both"
   })
   table.insert(ctrls, {
     Name = "DeviceState",
@@ -94,7 +94,7 @@ function GetControls(props)
     ButtonType = "Toggle",
     Count = props['Number of Devices'].Value,
     UserPin = true,
-    PinStyle = "Output",
+    PinStyle = "Output"
   })
   table.insert(ctrls, {
     Name = "DeviceOn",
@@ -102,7 +102,7 @@ function GetControls(props)
     ButtonType = "Trigger",
     Count = props['Number of Devices'].Value,
     UserPin = true,
-    PinStyle = "Output",
+    PinStyle = "Output"
   })
   table.insert(ctrls, {
     Name = "DeviceOff",
@@ -110,7 +110,15 @@ function GetControls(props)
     ButtonType = "Trigger",
     Count = props['Number of Devices'].Value,
     UserPin = true,
-    PinStyle = "Output",
+    PinStyle = "Output"
+  })
+  table.insert(ctrls, {
+    Name = "DeviceBypass",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = props['Number of Devices'].Value,
+    UserPin = true,
+    PinStyle = "Output"
   })
   table.insert(ctrls, {
     Name = "SequenceRunning",
@@ -124,7 +132,14 @@ function GetControls(props)
     ControlType = "Button",
     ButtonType = "Trigger",
     UserPin = true,
-    PinStyle = "Both",
+    PinStyle = "Both"
+  })
+  table.insert(ctrls, {
+    Name = "ReverseOffOrder",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    UserPin = true,
+    PinStyle = "Both"
   })
   return ctrls
 end
@@ -141,7 +156,7 @@ function GetControlLayout(props)
       Type = "GroupBox",
       Text = "Sequence Control",
       Position = {10, 15},
-      Size = {261, 140} ,
+      Size = {261, 165} ,
       FontSize = 12,
       StrokeWidth = 1,
       Radius = 8,
@@ -162,30 +177,44 @@ function GetControlLayout(props)
       FontSize = 18
     })
     table.insert(graphics,{
+      Type = "Text",
+      Text = "Reverse Off Order",
+      Position = {45, 150},
+      Size = {150, 25},
+      FontSize = 18
+    })
+    table.insert(graphics,{
       Type = "Header",
       Text = "Taps",
-      Position = {10, 160},
+      Position = {10, 185},
       Size = {261, 25},
       FontSize = 18
     })
     table.insert(graphics,{
-      Type = "Header",
-      Text = "State",
-      Position = {132, 190},
-      Size = {65, 25},
-      FontSize = 18
-    })
-    table.insert(graphics,{
-      Type = "Header",
-      Text = "On",
-      Position = {192, 190},
-      Size = {65, 25},
-      FontSize = 18
-    })
-    table.insert(graphics,{
-      Type = "Header",
+      Type = "Text",
       Text = "Off",
-      Position = {72, 190},
+      Position = {57, 215},
+      Size = {65, 25},
+      FontSize = 18
+    })
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "State",
+      Position = {107, 215},
+      Size = {65, 25},
+      FontSize = 18
+    })
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "On",
+      Position = {157, 215},
+      Size = {65, 25},
+      FontSize = 18
+    })
+    table.insert(graphics,{
+      Type = "Text",
+      Text = "Bypass",
+      Position = {207, 215},
       Size = {65, 25},
       FontSize = 18
     })
@@ -193,7 +222,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type = "Text",
         Text = "Tap " .. i,
-        Position = {10, i * 20 + 198},
+        Position = {5, i * 20 + 223},
         Size = {60, 24},
         FontSize = 15
       })
@@ -239,24 +268,38 @@ function GetControlLayout(props)
       Position = {167, 110},
       Size = {36, 36}
     }
+    layout["ReverseOffOrder"] = {
+      PrettyName = "Reverse Off Order",
+      Style = "Button",
+      Position = {195, 153},
+      Size = {50, 20},
+      FontSize = 20
+    }
     for i=1, tonumber(props['Number of Devices'].Value) do
       layout["DeviceOff " .. i] = {
         PrettyName = "Device " .. i .. "~Off Trigger",
         Style = "Button",
-        Position = {80, i * 20 + 200},
+        Position = {65, i * 20 + 225},
         Size = {45, 20}
      }
       layout["DeviceState " .. i] = {
         PrettyName = "Device " .. i .. "~State",
         Style = "Button",
-        Position = {141, i * 20 + 200},
+        Position = {116, i * 20 + 225},
         Size = {45, 20}
       }
        layout["DeviceOn " .. i] = {
         PrettyName = "Device " .. i .. "~On Trigger",
         Style = "Button",
-        Position = {203, i * 20 + 200},
+        Position = {167, i * 20 + 225},
         Size = {45, 20}
+      }
+      layout["DeviceBypass " .. i] = {
+        PrettyName = "Device " .. i .. "~Bypass",
+        Style = "Button",
+        Position = {218, i * 20 + 225},
+        Size = {45, 20},
+        Color = {242, 137, 174}
       }
     end
   elseif CurrentPage == "N/A" then
@@ -269,7 +312,7 @@ end
 if Controls then
   Index = 1 --Keeps track of which tap is currently being changed
   Running = false --Whether or not the sequencer is currently running
-  Direction = true --Whether the sequencer is currently turning on or off
+  Direction = true --Whether the sequencer is currently turning on (true) or off (false)
   
   --Variables for debuging scenarios
   DebugTx              = false
@@ -325,7 +368,8 @@ if Controls then
       Running = true
       UpdateRunning()
       Direction = currentDirection --Are we turning on or off?
-      Index = 1 --Start at the beginning
+      Index = 1 --Start at the beginning (or end)
+      ReverseOffOrder = Controls['ReverseOffOrder'].Boolean --Whether or not the off sequence should run backwards
       ChangeNext() --Runs first cycle while waiting for first timer tick
       if Running then SequenceTimer:Start(Controls["Delay"].Value) end --Start the sequence loop with the delay period specified
     end
@@ -335,12 +379,17 @@ if Controls then
   function ChangeNext()
     if DebugFunction then print("ChangeNext() Called") end
     if Running then --Only do if the sequence is currently running
-      if Index <= Properties['Number of Devices'].Value then
-        Controls['DeviceState'][Index].Boolean=Direction
-        if Direction then
-          Controls['DeviceOn'][Index]:Trigger()
-        else
-          Controls['DeviceOff'][Index]:Trigger()
+      if ReverseOffOrder == true and Direction == false then tap = Properties['Number of Devices'].Value + 1 - Index else tap = Index end --Invert index if Reverse Off Order is selected
+      if Index <= Properties['Number of Devices'].Value then --if there are still taps to change
+        print("1")
+        if Controls["DeviceBypass"][tap].Boolean == false then
+          print("2")
+          Controls['DeviceState'][tap].Boolean=Direction
+          if Direction == true then
+            Controls['DeviceOn'][tap]:Trigger()
+          elseif Direction == false then
+            Controls['DeviceOff'][tap]:Trigger()
+          end
         end
         Index=Index+1
       else
